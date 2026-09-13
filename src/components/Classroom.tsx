@@ -700,13 +700,17 @@ function SectionAttendanceSheet({ cls, currentUser }: { cls: ClassRoom; currentU
   const handleSave = () => {
     if (!isTeacher) return;
     students.forEach(({ student }) => {
+      const status = statuses[student.id.toLowerCase()];
+      // Skip students who were never explicitly marked - don't silently
+      // record them as Present just because the teacher didn't click them.
+      if (!status) return;
       saveAttendanceRecord({
         id: `${cls.id}_${student.id}_${selectedDate}`,
         studentId: student.id,
         studentName: student.name,
         date: selectedDate,
         time: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        status: statuses[student.id.toLowerCase()] || "Present",
+        status,
         subject: cls.subject || cls.name,
         classId: cls.id,
       });
