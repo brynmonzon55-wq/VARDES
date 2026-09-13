@@ -3391,6 +3391,28 @@ export default function TeacherDashboard({
                       />
                     </div>
 
+                    <div className="space-y-1.5">
+                      <button
+                        type="button"
+                        onClick={handleGenerateMeetLink}
+                        disabled={annGeneratingMeet}
+                        className="flex items-center gap-2 px-3 py-2 text-xs font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-500/40 rounded-xl hover:bg-emerald-900/80 cursor-pointer transition-colors disabled:opacity-60 disabled:cursor-wait"
+                      >
+                        {annGeneratingMeet ? (
+                          <RefreshCw className="h-4 w-4 animate-spin" />
+                        ) : (
+                          <Video className="h-4 w-4" />
+                        )}
+                        <span>{annGeneratingMeet ? "Generating..." : "Generate Google Meet Link"}</span>
+                      </button>
+                      {annMeetError && (
+                        <div className="p-2.5 bg-rose-500/15 border border-rose-500/30 rounded-xl flex items-start gap-1.5 text-xs font-semibold text-rose-300">
+                          <AlertCircle className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+                          <span>{annMeetError}</span>
+                        </div>
+                      )}
+                    </div>
+
                     {/* Audience Scope Selector */}
                     <div className="space-y-2 pt-2 border-t border-slate-800">
                       <label className="text-xs font-bold text-slate-200">
