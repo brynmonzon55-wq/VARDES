@@ -19,9 +19,7 @@ import {
   Search,
   CheckCircle2,
   Award,
-  Key,
   X,
-  Eye,
   UserCheck,
   Palette,
   TrendingUp,
@@ -34,16 +32,12 @@ import {
   School,
   Download,
   Users,
-  Globe,
-  Copy,
-  Check,
-  Plus
+  Globe
 } from "lucide-react";
-import { User, AttendanceRecord, AttendanceStatus, StudentStats, ClassPost, PostComment, AssignmentSubmission, ClassRoom } from "../types";
+import { User, AttendanceRecord, AttendanceStatus, StudentStats, ClassPost, AssignmentSubmission, ClassRoom } from "../types";
 import type { AppTheme, AppThemeMode } from "../App";
 import { linkifyText, hasJoinCode } from "../lib/linkify";
 import { processFileUpload } from "../lib/fileUtils";
-import AnimatedThemeBackground from "./AnimatedThemeBackground";
 import SettingsTab from "./SettingsTab";
 import UserAvatar from "./UserAvatar";
 import StudentProfile from "./StudentProfile";
@@ -59,19 +53,13 @@ import {
   recordTodayAttendance,
   calculateStudentStats,
   formatDate,
-  deleteOwnAccount,
-  changeOwnPassword,
-  forceReconnect,
   getAnnouncements,
   getAssignments,
-  getCommentsForPost,
-  addComment,
   getSubmissionForStudent,
   submitAssignment,
   getUnreadDirectMessagesCount,
   getClassesForStudent,
   joinClassByCode,
-  getClasses,
 } from "../lib/db";
 
 interface StudentDashboardProps {
@@ -125,7 +113,6 @@ export default function StudentDashboard({
   const [announcements, setAnnouncements] = useState<ClassPost[]>([]);
   const [announcementSearch, setAnnouncementSearch] = useState("");
   const [enrolledClasses, setEnrolledClasses] = useState<ClassRoom[]>([]);
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
   const [joinSuccessMsg, setJoinSuccessMsg] = useState<string | null>(null);
   const [joinErrorMsg, setJoinErrorMsg] = useState<string | null>(null);
 
@@ -143,18 +130,6 @@ export default function StudentDashboard({
   const [submissionFileError, setSubmissionFileError] = useState("");
   const [isSubmittingWork, setIsSubmittingWork] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState<string | null>(null);
-
-  // Profile & Settings modals
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [editNameValue, setEditNameValue] = useState("");
-  const [editEmailValue, setEditEmailValue] = useState("");
-  const [editLocationValue, setEditLocationValue] = useState("");
-
-  const [showChangePassword, setShowChangePassword] = useState(false);
-  const [currentPasswordInput, setCurrentPasswordInput] = useState("");
-  const [newPasswordInput, setNewPasswordInput] = useState("");
-  const [changePasswordError, setChangePasswordError] = useState<string | null>(null);
-  const [changePasswordSuccess, setChangePasswordSuccess] = useState<string | null>(null);
 
   const todayStr = formatDate(new Date());
 
@@ -434,25 +409,6 @@ export default function StudentDashboard({
     }
   };
 
-  // Password update handler
-  const handleChangePassword = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setChangePasswordError(null);
-    setChangePasswordSuccess(null);
-    if (!currentPasswordInput || !newPasswordInput) {
-      setChangePasswordError("Please fill out both fields.");
-      return;
-    }
-    try {
-      await changeOwnPassword(currentPasswordInput, newPasswordInput);
-      setChangePasswordSuccess("Password updated successfully.");
-      setCurrentPasswordInput("");
-      setNewPasswordInput("");
-    } catch (err: any) {
-      setChangePasswordError("Failed to update password. Please check your current password.");
-    }
-  };
-
   // Selected Teacher Object
   const selectedTeacher = teachers.find(
     (t) =>
@@ -547,12 +503,6 @@ export default function StudentDashboard({
       }
       setTimeout(() => setJoinErrorMsg(null), 5000);
     }
-  };
-
-  const handleCopyCode = (code: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(code);
-    setTimeout(() => setCopiedCode(null), 2500);
   };
 
   return (

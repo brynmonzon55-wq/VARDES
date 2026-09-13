@@ -1,4 +1,4 @@
-import { User, UserRole, AttendanceRecord, AttendanceStatus, StudentStats, SecurityLog, ClassRoom, ClassPost, PostComment, AssignmentSubmission, DirectMessage, MessengerConversation, PostAudience } from "../types";
+import { User, UserRole, AttendanceRecord, AttendanceStatus, StudentStats, SecurityLog, ClassRoom, ClassPost, PostComment, AssignmentSubmission, DirectMessage, MessengerConversation } from "../types";
 import { db, auth, idToAuthEmail, createUserWithoutSigningIn, googleProvider } from "./firebase";
 import { doc, setDoc, deleteDoc, collection, onSnapshot, getDoc, query, where } from "firebase/firestore";
 import {
@@ -570,13 +570,6 @@ export function formatTime(date: Date): string {
   const mm = String(date.getMinutes()).padStart(2, "0");
   const ss = String(date.getSeconds()).padStart(2, "0");
   return `${hh}:${mm}:${ss}`;
-}
-
-// Get dates relative to today
-function getRelativeDateString(daysOffset: number): string {
-  const d = new Date();
-  d.setDate(d.getDate() - daysOffset);
-  return formatDate(d);
 }
 
 let isListenersAttached = false;

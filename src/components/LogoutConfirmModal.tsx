@@ -1,6 +1,5 @@
-import React from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { LogOut, X, AlertTriangle, ShieldCheck } from "lucide-react";
+import { LogOut, X } from "lucide-react";
 import { User } from "../types";
 import UserAvatar from "./UserAvatar";
 import type { AppTheme, AppThemeMode } from "../App";
@@ -19,8 +18,6 @@ export default function LogoutConfirmModal({
   user,
   onConfirm,
   onCancel,
-  theme = "default",
-  themeMode = "night",
 }: LogoutConfirmModalProps) {
   if (!isOpen) return null;
 

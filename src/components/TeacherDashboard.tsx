@@ -3,19 +3,15 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   LogOut,
   Users,
-  CheckCircle,
-  XCircle,
   Search,
   UserPlus,
   UserMinus,
   Trash2,
-  Calendar,
   AlertCircle,
   FileSpreadsheet,
   Edit,
   Plus,
   UserCheck,
-  TrendingUp,
   Filter,
   ShieldAlert,
   Settings as SettingsIcon,
@@ -26,8 +22,6 @@ import {
   FileText,
   Paperclip,
   Send,
-  Award,
-  Upload,
   Moon,
   Sun,
   Palette,
@@ -36,8 +30,6 @@ import {
   GraduationCap,
   CheckCircle2,
   Mail,
-  MapPin,
-  Building2,
   BookOpen,
   RefreshCw,
   School,
@@ -49,7 +41,6 @@ import {
   Layers,
   Check,
   ChevronRight,
-  AlertTriangle,
   Info,
   Globe
 } from "lucide-react";
@@ -57,11 +48,8 @@ import { generateGoogleMeetLink } from "../lib/googleMeet";
 import {
   User,
   AttendanceRecord,
-  AttendanceStatus,
-  StudentStats,
   SecurityLog,
   ClassPost,
-  PostComment,
   AssignmentSubmission,
   ClassRoom,
   PostAudience
@@ -72,24 +60,18 @@ import { processFileUpload } from "../lib/fileUtils";
 import StudentProfile from "./StudentProfile";
 import TeacherProfile from "./TeacherProfile";
 import PostCommentsSection from "./PostCommentsSection";
-import AnimatedThemeBackground from "./AnimatedThemeBackground";
 import SettingsTab from "./SettingsTab";
 import UserAvatar from "./UserAvatar";
 import DailyCheckinsTab from "./DailyCheckinsTab";
-import Classroom from "./Classroom";
 import ClassMessenger, { openDirectMessage } from "./ClassMessenger";
 import JoinCodePill from "./JoinCodePill";
 import {
   getUsers,
   saveUser,
   getAttendanceRecords,
-  saveAttendanceRecord,
-  deleteAttendanceRecord,
   calculateStudentStats,
   formatDate,
-  formatTime,
   getSecurityLogs,
-  deleteSecurityLog,
   getAnnouncements,
   getAssignments,
   isPostVisibleToTeacher,
@@ -97,14 +79,10 @@ import {
   createMultiplePosts,
   deletePost,
   comparePostsDesc,
-  getPostTime,
-  getCommentsForPost,
-  addComment,
   getSubmissionsForPost,
   gradeSubmission,
   createUserByAdmin,
   updateUserApprovalStatus,
-  changeOwnPassword,
   verifyCurrentPassword,
   addSecurityLog,
   getClassesForTeacher,
@@ -184,10 +162,6 @@ export default function TeacherDashboard({
   const [actionPassword, setActionPassword] = useState("");
   const [actionPasswordError, setActionPasswordError] = useState<string | null>(null);
   const [isVerifyingPassword, setIsVerifyingPassword] = useState(false);
-
-  // Attendance Sheet State
-  const [selectedDate, setSelectedDate] = useState(formatDate(new Date()));
-  const [statusFilter, setStatusFilter] = useState<"All" | "Present" | "Late" | "Absent">("All");
 
   // Edit / Add Student Modal State
   const [showAddStudentModal, setShowAddStudentModal] = useState(false);
@@ -665,26 +639,6 @@ export default function TeacherDashboard({
     loadDatabase();
   };
 
-  // Log attendance for a student on selected date
-  const handleSetStudentAttendance = (student: User, status: AttendanceStatus) => {
-    const existing = attendanceRecords.find(
-      (r) => r.studentId.toLowerCase() === student.id.toLowerCase() && r.date === selectedDate
-    );
-
-    const record: AttendanceRecord = {
-      id: existing?.id || `rec-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      studentId: student.id,
-      studentName: student.name,
-      date: selectedDate,
-      time: formatTime(new Date()),
-      status,
-      classId: selectedClass?.id,
-    };
-
-    saveAttendanceRecord(record);
-    loadDatabase();
-  };
-
   const handleAnnFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -845,24 +799,6 @@ export default function TeacherDashboard({
       setAssignmentSubmissions(getSubmissionsForPost(selectedAssignmentForGrading.id));
     }
     loadDatabase();
-  };
-
-  // Attachment upload handler
-  const handleFileChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    setName: (n: string) => void,
-    setUrl: (u: string) => void
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    if (file.size > 3 * 1024 * 1024) {
-      alert("File exceeds 3MB limit.");
-      return;
-    }
-    setName(file.name);
-    const reader = new FileReader();
-    reader.onload = (evt) => setUrl(evt.target?.result as string);
-    reader.readAsDataURL(file);
   };
 
   // Filtered Students

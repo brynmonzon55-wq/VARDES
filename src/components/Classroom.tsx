@@ -1,21 +1,20 @@
 import { useEffect, useState, useMemo } from "react";
 import {
-  Plus, ArrowLeft, Check, Users, MessageSquare,
-  Paperclip, Calendar, Trash2, Send, X, FileText, Megaphone, UserPlus, UserMinus,
-  Activity, ClipboardCheck, Copy, School, BookOpen, Clock, Search,
-  AlertTriangle, ShieldAlert, CheckCircle2, ChevronRight, UserCheck,
-  Lock, Globe, MessageCircle, Ban, ShieldOff, Layers, Info, LogOut
+  Plus, ArrowLeft, Check, Users,
+  Paperclip, Calendar, Trash2, X, FileText, Megaphone, UserMinus,
+  Activity, ClipboardCheck, Copy, School, BookOpen, Clock,
+  AlertTriangle, ShieldAlert, CheckCircle2, ChevronRight,
+  Globe, MessageCircle, Ban, ShieldOff, Layers, Info, LogOut
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { User, ClassRoom, ClassPost, PostComment, AssignmentSubmission, AttendanceRecord, AttendanceStatus, PostAudience } from "../types";
+import { User, ClassRoom, ClassPost, AssignmentSubmission, AttendanceRecord, AttendanceStatus, PostAudience } from "../types";
 import {
   getClassesForTeacher, getClassesForStudent, getClassById, createClass,
   addStudentToClass, removeStudentFromClass, blockStudentFromClass, unblockStudentFromClass, getBlockedStudentsForClass, joinClassByCode,
-  deleteClass, leaveClass, getPostsForClass, createPost, createMultiplePosts, deletePost, getCommentsForPost,
-  getClassCommentsForPost, getPrivateCommentsForPost,
-  addComment, getSubmissionsForPost, getSubmissionForStudent, submitAssignment,
+  deleteClass, leaveClass, getPostsForClass, createPost, createMultiplePosts, deletePost,
+  getSubmissionsForPost, getSubmissionForStudent, submitAssignment,
   getClassmatesWithStats, getUsers, getAttendanceRecords, saveAttendanceRecord, attendanceMatchesClass, formatDate,
-  getPostTime, comparePostsDesc,
+  getPostTime,
 } from "../lib/db";
 import { openDirectMessage } from "./ClassMessenger";
 import { processFileUpload } from "../lib/fileUtils";
@@ -1046,10 +1045,6 @@ function ClassLog({ currentUser, cls }: { currentUser: User; cls: ClassRoom }) {
     ...posts.map((post) => ({ kind: "post" as const, ts: getPostTime(post), post })),
     ...attendanceEntries,
   ].sort((a, b) => b.ts - a.ts);
-
-  const selectedTargetClassNames = teacherClasses
-    .filter((c) => broadcastSelectedIds.includes(c.id))
-    .map((c) => c.name);
 
   return (
     <div className="space-y-4">

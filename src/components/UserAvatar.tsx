@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { UserRole } from "../types";
 import { User as UserIcon } from "lucide-react";
 

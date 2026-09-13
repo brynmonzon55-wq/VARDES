@@ -3,9 +3,6 @@ import { motion, AnimatePresence } from "motion/react";
 import {
   User as UserIcon,
   Key,
-  Shield,
-  Sun,
-  Moon,
   RefreshCw,
   LogOut,
   Trash2,
@@ -14,16 +11,11 @@ import {
   Save,
   Lock,
   Mail,
-  MapPin,
   Layers,
-  Sliders,
   ChevronDown,
   ChevronUp,
   AlertTriangle,
   Camera,
-  Upload,
-  Image as ImageIcon,
-  X,
   Phone,
   Home,
   Globe,
@@ -80,7 +72,7 @@ export default function SettingsTab({
   const [isChangingPass, setIsChangingPass] = useState(false);
 
   // Sync state
-  const [syncMsg, setSyncMsg] = useState<string | null>(null);
+  const [, setSyncMsg] = useState<string | null>(null);
   const [isSyncing, setIsSyncing] = useState(false);
 
   // Account deletion state & Advanced Options

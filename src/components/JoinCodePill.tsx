@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { School, Key, Check } from 'lucide-react';
+import { School, Check } from 'lucide-react';
 
 export interface JoinCodePillProps {
   code: string;

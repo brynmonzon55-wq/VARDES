@@ -1,28 +1,20 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   MessageSquare,
   Send,
   Paperclip,
   Search,
   X,
-  ChevronDown,
-  User as UserIcon,
   Check,
   CheckCheck,
-  Trash2,
   Minimize2,
   Maximize2,
   Users,
-  GraduationCap,
-  Smile,
-  FileText,
-  Clock,
   ArrowLeft,
-  School,
   Circle
 } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
-import { User, DirectMessage, MessengerConversation, UserRole } from "../types";
+import { motion } from "motion/react";
+import { User, DirectMessage, MessengerConversation } from "../types";
 import { linkifyText } from "../lib/linkify";
 import type { AppTheme, AppThemeMode } from "../App";
 import {
@@ -32,10 +24,7 @@ import {
   sendDirectMessage,
   markDirectMessagesAsRead,
   getUnreadDirectMessagesCount,
-  deleteDirectMessage,
-  formatTime,
   getUserPresence,
-  isUserOnline,
 } from "../lib/db";
 import UserAvatar from "./UserAvatar";
 
@@ -203,8 +192,6 @@ export default function ClassMessenger({
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const isTeacher = currentUser.role === "teacher";
 
   // Reload conversations & unread count
   const refreshData = () => {

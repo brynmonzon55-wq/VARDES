@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Search,
@@ -8,20 +8,14 @@ import {
   UserCheck,
   User,
   Mail,
-  MapPin,
   Calendar as CalendarIcon,
   Eye,
   X,
-  Award,
-  BookOpen,
-  Filter,
-  TrendingUp,
-  ShieldCheck,
   AlertCircle,
   GraduationCap
 } from "lucide-react";
-import { User as UserType, AttendanceRecord, AttendanceStatus } from "../types";
-import { formatDate, calculateStudentStats, getAttendanceRecords } from "../lib/db";
+import { User as UserType, AttendanceRecord } from "../types";
+import { formatDate, calculateStudentStats } from "../lib/db";
 import UserAvatar from "./UserAvatar";
 
 interface DailyCheckinsTabProps {
@@ -112,15 +106,11 @@ export default function DailyCheckinsTab({
   const totalCheckedIn = recordsForDate.length;
   const presentCount = recordsForDate.filter((r) => r.status === "Present").length;
   const lateCount = recordsForDate.filter((r) => r.status === "Late").length;
-  const absentCount = recordsForDate.filter((r) => r.status === "Absent").length;
   const notCheckedInCount = totalStudents - totalCheckedIn;
 
   // Compute selected modal student info
   const modalStudentRecord = infoModalStudent ? recordMap.get(infoModalStudent.id.toLowerCase()) : null;
   const modalStudentStats = infoModalStudent ? calculateStudentStats(infoModalStudent.id) : null;
-  const modalStudentHistory = infoModalStudent
-    ? attendanceRecords.filter((r) => r.studentId.toLowerCase() === infoModalStudent.id.toLowerCase())
-    : [];
 
   const isStudentView = currentUser.role === "student";
 
@@ -298,7 +288,7 @@ export default function DailyCheckinsTab({
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredStudents.map(({ student, record, isCheckedIn, status }) => {
+          {filteredStudents.map(({ student, record, status }) => {
             return (
               <motion.div
                 key={student.id}

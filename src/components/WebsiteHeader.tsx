@@ -57,7 +57,6 @@ export default function WebsiteHeader({
   onNavigate,
   onSelectRole,
   currentUser,
-  onLogout,
   theme,
   themeMode,
   particlesEnabled = true,

@@ -4,7 +4,6 @@ import {
   ArrowLeft,
   Mail,
   Phone,
-  MapPin,
   BookOpen,
   CheckCircle2,
   Clock,
@@ -13,10 +12,7 @@ import {
   Building2,
   ShieldCheck,
   Edit,
-  Trash2,
   Users,
-  GraduationCap,
-  UserCheck,
   X,
   Search,
   MessageSquare

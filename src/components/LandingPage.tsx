@@ -7,8 +7,6 @@ import {
   ChevronRight,
   ArrowRight,
   BarChart3,
-  Bell,
-  Shield,
   ShieldCheck,
   MessageSquare,
   Play,
@@ -20,9 +18,6 @@ import {
   Users,
   Paperclip,
   FolderDown,
-  Layers,
-  Award,
-  Hash,
 } from "lucide-react";
 import { UserRole } from "../types";
 import type { AppTheme, AppThemeMode } from "../App";
@@ -261,14 +256,12 @@ const NEW_CHECKIN_CANDIDATES: SimulatedStudent[] = [
 export default function LandingPage({
   onSelectRole,
   theme = "default",
-  themeMode,
 }: LandingPageProps) {
   const [simulatedStudents, setSimulatedStudents] = useState<SimulatedStudent[]>(INITIAL_SIMULATED_STUDENTS);
   const [activeRate, setActiveRate] = useState(92);
   const [recentFlash, setRecentFlash] = useState<string | null>(null);
   const [activeClassroomTab, setActiveClassroomTab] = useState<"stream" | "classwork" | "materials" | "people" | "attendance">("stream");
 
-  const isNight = themeMode === "night";
   const tStyles = getLandingThemeStyles(theme);
 
   const simulateNewCheckIn = () => {

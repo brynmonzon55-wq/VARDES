@@ -6,7 +6,6 @@ import {
   Download,
   ChevronLeft,
   ChevronRight,
-  MapPin,
   Phone,
   Home,
   Globe,
