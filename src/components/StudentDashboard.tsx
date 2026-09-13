@@ -37,7 +37,7 @@ import {
 import { User, AttendanceRecord, AttendanceStatus, StudentStats, ClassPost, AssignmentSubmission, ClassRoom } from "../types";
 import type { AppTheme, AppThemeMode } from "../App";
 import { linkifyText, hasJoinCode } from "../lib/linkify";
-import { processFileUpload } from "../lib/fileUtils";
+import { processFileUpload, openDataUrlInNewTab } from "../lib/fileUtils";
 import SettingsTab from "./SettingsTab";
 import UserAvatar from "./UserAvatar";
 import StudentProfile from "./StudentProfile";
@@ -1168,7 +1168,7 @@ export default function StudentDashboard({
                               </span>
                             )}
                           </div>
-                          <h2 className="text-lg font-black text-ink tracking-tight mt-1">
+                          <h2 className="text-lg font-black text-ink tracking-tight mt-1 break-words">
                             {post.title || "Course Announcement"}
                           </h2>
                         </div>
@@ -1210,7 +1210,7 @@ export default function StudentDashboard({
                               src={post.attachmentDataUrl}
                               alt={post.attachmentName || "Attached photo"}
                               className="max-h-72 w-full object-cover rounded-t-2xl hover:opacity-95 transition-opacity cursor-pointer"
-                              onClick={() => window.open(post.attachmentDataUrl, "_blank")}
+                              onClick={() => openDataUrlInNewTab(post.attachmentDataUrl)}
                             />
                             <div className="p-3 bg-slate-900/90 border-t border-ink-soft/15 flex items-center justify-between text-xs font-bold text-ink">
                               <span className="flex items-center gap-1.5 truncate">
@@ -1368,7 +1368,7 @@ export default function StudentDashboard({
                                 src={assignment.attachmentDataUrl}
                                 alt={assignment.attachmentName || "Attached photo"}
                                 className="max-h-48 w-full object-cover rounded-t-2xl hover:opacity-95 transition-opacity cursor-pointer"
-                                onClick={() => window.open(assignment.attachmentDataUrl, "_blank")}
+                                onClick={() => openDataUrlInNewTab(assignment.attachmentDataUrl)}
                               />
                               <div className="p-2.5 bg-slate-900/90 border-t border-ink-soft/15 flex items-center justify-between text-xs font-bold text-ink">
                                 <span className="flex items-center gap-1.5 truncate">
@@ -1688,7 +1688,7 @@ export default function StudentDashboard({
                             src={selectedAssignmentForSubmission.attachmentDataUrl}
                             alt="Reference"
                             className="max-h-40 w-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                            onClick={() => window.open(selectedAssignmentForSubmission.attachmentDataUrl, "_blank")}
+                            onClick={() => openDataUrlInNewTab(selectedAssignmentForSubmission.attachmentDataUrl)}
                           />
                           <div className="p-2 flex items-center justify-between text-[11px] font-bold">
                             <span className="truncate text-ink-soft">{selectedAssignmentForSubmission.attachmentName || "Reference Photo"}</span>
@@ -1787,7 +1787,7 @@ export default function StudentDashboard({
                                       src={attachmentDataUrl}
                                       alt="Upload preview"
                                       className="h-16 w-16 object-cover rounded-xl border border-ink-soft/20 cursor-pointer"
-                                      onClick={() => window.open(attachmentDataUrl, "_blank")}
+                                      onClick={() => openDataUrlInNewTab(attachmentDataUrl)}
                                     />
                                     <div className="flex-1 min-w-0">
                                       <p className="text-xs font-bold text-teal-300 truncate">{attachmentName || "Attached Image"}</p>

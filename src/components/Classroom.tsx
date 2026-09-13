@@ -1699,8 +1699,8 @@ function PostCard({
             <span className="text-[11px] text-slate-400 font-medium">By {post.authorName} &bull; {timeAgo(post.createdAt)}</span>
           </div>
 
-          {post.title && <h4 className="text-base font-extrabold text-white">{post.title}</h4>}
-          <div className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap">
+          {post.title && <h4 className="text-base font-extrabold text-white break-words">{post.title}</h4>}
+          <div className="text-xs text-slate-300 leading-relaxed whitespace-pre-wrap break-words">
             {linkifyText(post.content)}
             {post.classCode && !hasJoinCode(post.content, post.classCode) && (
               <div className="mt-2.5">

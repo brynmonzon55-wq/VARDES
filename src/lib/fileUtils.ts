@@ -98,3 +98,31 @@ export async function processFileUpload(
     reader.readAsDataURL(file);
   });
 }
+
+/**
+ * Opens a base64 "data:" URL (e.g. an attached photo) in a new browser tab.
+ *
+ * Chrome and most Chromium browsers block top-level navigation of a new tab
+ * directly to a data: URL for security reasons - window.open(dataUrl, "_blank")
+ * silently results in a blank about:blank tab. To work around this, we convert
+ * the data URL into a Blob and open a blob: URL instead, which browsers allow.
+ */
+export async function openDataUrlInNewTab(dataUrl: string | undefined | null): Promise<void> {
+  if (!dataUrl) return;
+  try {
+    const res = await fetch(dataUrl);
+    const blob = await res.blob();
+    const blobUrl = URL.createObjectURL(blob);
+    const win = window.open(blobUrl, "_blank");
+    // Revoke the blob URL once the new tab has had a chance to load it.
+    if (win) {
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 60_000);
+    } else {
+      URL.revokeObjectURL(blobUrl);
+    }
+  } catch {
+    // Fallback: if the blob conversion fails for any reason, still attempt
+    // the direct approach rather than doing nothing.
+    window.open(dataUrl, "_blank");
+  }
+}

@@ -56,7 +56,7 @@ import {
 } from "../types";
 import type { AppTheme, AppThemeMode } from "../App";
 import { linkifyText, hasJoinCode } from "../lib/linkify";
-import { processFileUpload } from "../lib/fileUtils";
+import { processFileUpload, openDataUrlInNewTab } from "../lib/fileUtils";
 import StudentProfile from "./StudentProfile";
 import TeacherProfile from "./TeacherProfile";
 import PostCommentsSection from "./PostCommentsSection";
@@ -1730,7 +1730,7 @@ export default function TeacherDashboard({
                         <span className="px-2.5 py-0.5 text-[10px] font-bold bg-slate-800 text-slate-300 rounded-full border border-slate-700">
                           {post.subject || "General"}
                         </span>
-                        <h3 className="text-base font-black text-ink">{post.title}</h3>
+                        <h3 className="text-base font-black text-ink break-words">{post.title}</h3>
                       </div>
                       <button
                         onClick={() => {
@@ -1762,7 +1762,7 @@ export default function TeacherDashboard({
                             src={post.attachmentDataUrl}
                             alt={post.attachmentName || "Attached photo"}
                             className="max-h-72 w-full object-cover rounded-t-2xl hover:opacity-95 transition-opacity cursor-pointer"
-                            onClick={() => window.open(post.attachmentDataUrl, "_blank")}
+                            onClick={() => openDataUrlInNewTab(post.attachmentDataUrl)}
                           />
                           <div className="p-2.5 bg-slate-900/90 flex items-center justify-between text-xs font-bold text-slate-200">
                             <span className="flex items-center gap-1.5 truncate">
@@ -1897,7 +1897,7 @@ export default function TeacherDashboard({
                                 src={assignment.attachmentDataUrl}
                                 alt={assignment.attachmentName || "Attached photo"}
                                 className="max-h-48 w-full object-cover rounded-t-2xl hover:opacity-95 transition-opacity cursor-pointer"
-                                onClick={() => window.open(assignment.attachmentDataUrl, "_blank")}
+                                onClick={() => openDataUrlInNewTab(assignment.attachmentDataUrl)}
                               />
                               <div className="p-2.5 bg-slate-900/90 border-t border-ink-soft/15 flex items-center justify-between text-xs font-bold text-ink">
                                 <span className="flex items-center gap-1.5 truncate">
@@ -2430,7 +2430,7 @@ export default function TeacherDashboard({
                                 src={sub.attachmentDataUrl}
                                 alt={sub.attachmentName || "Student submission photo"}
                                 className="max-h-48 w-full object-cover cursor-pointer hover:opacity-90 transition-opacity"
-                                onClick={() => window.open(sub.attachmentDataUrl, "_blank")}
+                                onClick={() => openDataUrlInNewTab(sub.attachmentDataUrl)}
                               />
                               <div className="p-2 flex items-center justify-between text-[11px] font-bold">
                                 <span className="truncate text-ink-soft flex items-center gap-1">
