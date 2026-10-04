@@ -1,0 +1,626 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+
+  /* ---- Neon Cyberpunk Design System ---- */
+  --color-cream: rgba(13, 17, 28, 0.85);
+  --color-cream-dim: rgba(20, 26, 44, 0.75);
+  --color-ink: #f8fafc;
+  --color-ink-soft: #94a3b8;
+
+  /* Neon Magenta / Pink */
+  --color-coral-50: rgba(255, 0, 127, 0.15);
+  --color-coral-100: rgba(255, 0, 127, 0.28);
+  --color-coral-400: #ff3399;
+  --color-coral-500: #ff007f;
+  --color-coral-600: #e0006c;
+  --color-coral-700: #f43f5e;
+  --color-coral-900: #ffe4e6;
+
+  /* Neon Cyan / Electric Blue */
+  --color-teal-50: rgba(0, 240, 255, 0.15);
+  --color-teal-100: rgba(0, 240, 255, 0.28);
+  --color-teal-400: #00f0ff;
+  --color-teal-500: #06b6d4;
+  --color-teal-600: #38bdf8;
+  --color-teal-700: #7dd3fc;
+
+  /* Neon Violet / Purple */
+  --color-violet-50: rgba(176, 38, 255, 0.15);
+  --color-violet-100: rgba(176, 38, 255, 0.28);
+  --color-violet-400: #c084fc;
+  --color-violet-500: #a855f7;
+  --color-violet-600: #8b5cf6;
+  --color-violet-700: #d8b4fe;
+}
+
+/* ========================================================================= */
+/* BASE HTML STYLES & TRANSITIONS */
+/* ========================================================================= */
+html {
+  transition: background-color 0.4s ease, background-image 0.4s ease, color 0.3s ease;
+  color-scheme: dark;
+  overflow-x: hidden;
+  max-width: 100vw;
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeSpeed;
+}
+
+/* ========================================================================= */
+/* THEME 1: CYBERPUNK (DEFAULT) */
+/* ========================================================================= */
+:root, html, html.theme-default {
+  --theme-gradient-from: #22d3ee;
+  --theme-gradient-via: #e879f9;
+  --theme-gradient-to: #c084fc;
+  --theme-glow-color: rgba(0, 240, 255, 0.5);
+
+  --color-teal-50: rgba(0, 240, 255, 0.15);
+  --color-teal-100: rgba(0, 240, 255, 0.28);
+  --color-teal-400: #00f0ff;
+  --color-teal-500: #06b6d4;
+  --color-teal-600: #38bdf8;
+  --color-teal-700: #7dd3fc;
+}
+
+/* Cyberpunk Night Mode (Ultra Deep Void Midnight & Electric Neon) */
+html.theme-default,
+html.theme-default.mode-night {
+  background-color: #02040a;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(0, 240, 255, 0.10), transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(255, 0, 127, 0.09), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(168, 85, 247, 0.08), transparent 50%),
+    linear-gradient(135deg, #02040a, #040814, #02040a);
+}
+
+/* Cyberpunk Day Mode (Luminous Electric Neo-Tokyo Day) */
+html.theme-default.mode-day {
+  background-color: #0b152d;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(0, 240, 255, 0.40), transparent 50%),
+    radial-gradient(circle at 80% 30%, rgba(232, 121, 249, 0.35), transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(147, 51, 234, 0.30), transparent 55%),
+    linear-gradient(135deg, #0a1428, #111e3b, #1b2042);
+}
+
+/* ========================================================================= */
+/* THEME 1.5: SAKURA (HANAMI & YOZAKURA — CHERRY BLOSSOM SEASON) */
+/* ========================================================================= */
+html.theme-sakura {
+  --theme-gradient-from: #ffb3c6;
+  --theme-gradient-via: #ff8fab;
+  --theme-gradient-to: #f5b942;
+  --theme-glow-color: rgba(255, 143, 171, 0.55);
+
+  --color-cyan-300: #ffd6e0;
+  --color-cyan-400: #ff8fab; /* Somei Yoshino Blossom Pink */
+  --color-cyan-500: #e0447a;
+  --color-fuchsia-300: #ffb3c6;
+  --color-fuchsia-400: #ff4d79; /* Cherry Stamen Crimson */
+  --color-fuchsia-500: #c81d5c;
+  --color-purple-300: #ffe8b8;
+  --color-purple-400: #f5b942; /* Yozakura Lantern Gold */
+  --color-purple-500: #c9840f;
+
+  --color-teal-50: rgba(255, 143, 171, 0.15);
+  --color-teal-100: rgba(255, 143, 171, 0.28);
+  --color-teal-200: rgba(255, 143, 171, 0.4);
+  --color-teal-400: #ff8fab;
+  --color-teal-500: #e0447a;
+  --color-teal-600: #ffb3c6;
+  --color-teal-700: #ffe3ea;
+}
+
+/* Sakura Night Mode (Yozakura: Lantern-lit night blossoms & moonlit petals) */
+html.theme-sakura,
+html.theme-sakura.mode-night {
+  background-color: #0d0610;
+  background-image:
+    radial-gradient(circle at 15% 15%, rgba(255, 143, 171, 0.10), transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(245, 185, 66, 0.09), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(200, 29, 92, 0.08), transparent 50%),
+    linear-gradient(135deg, #0d0610, #170a1c, #0d0610);
+}
+
+/* Sakura Day Mode (Hanami: Somei-Yoshino blossom blizzard in spring sunlight) */
+html.theme-sakura.mode-day {
+  background-color: #2b0f1e;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(255, 143, 171, 0.45), transparent 50%),
+    radial-gradient(circle at 80% 25%, rgba(245, 185, 66, 0.35), transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(255, 220, 235, 0.30), transparent 55%),
+    linear-gradient(135deg, #2a0f1e, #3d1730, #2b1420);
+}
+
+html.theme-sakura .neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(255, 143, 171, 0.4), inset 0 0 12px rgba(255, 143, 171, 0.15);
+}
+html.theme-sakura .neon-border-cyan {
+  border: 1px solid rgba(255, 143, 171, 0.5) !important;
+}
+html.theme-sakura .neon-text-cyan {
+  color: #ff8fab !important;
+  text-shadow: 0 0 12px rgba(255, 143, 171, 0.6);
+}
+html.theme-sakura input:focus,
+html.theme-sakura select:focus,
+html.theme-sakura textarea:focus {
+  border-color: #ff8fab;
+  box-shadow: 0 0 15px rgba(255, 143, 171, 0.4);
+}
+
+/* ========================================================================= */
+/* THEME 2: SPRING (SAKURA & EMERALD) */
+/* ========================================================================= */
+html.theme-spring {
+  --theme-gradient-from: #f472b6;
+  --theme-gradient-via: #fb7185;
+  --theme-gradient-to: #34d399;
+  --theme-glow-color: rgba(244, 114, 182, 0.6);
+
+  --color-cyan-300: #fbcfe8;
+  --color-cyan-400: #f472b6; /* Sakura Pink */
+  --color-cyan-500: #ec4899;
+  --color-fuchsia-300: #fda4af;
+  --color-fuchsia-400: #fb7185; /* Blossom Rose */
+  --color-fuchsia-500: #f43f5e;
+  --color-purple-300: #a7f3d0;
+  --color-purple-400: #34d399; /* Spring Emerald Leaf */
+  --color-purple-500: #10b981;
+
+  --color-teal-50: rgba(244, 114, 182, 0.15);
+  --color-teal-100: rgba(244, 114, 182, 0.28);
+  --color-teal-200: rgba(244, 114, 182, 0.4);
+  --color-teal-400: #f472b6;
+  --color-teal-500: #ec4899;
+  --color-teal-600: #f472b6;
+  --color-teal-700: #fbcfe8;
+}
+
+/* Spring Night Mode (Moonlit Sakura Forest Midnight) */
+html.theme-spring,
+html.theme-spring.mode-night {
+  background-color: #030806;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(244, 114, 182, 0.12), transparent 45%),
+    radial-gradient(circle at 80% 25%, rgba(52, 211, 153, 0.08), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(251, 113, 133, 0.07), transparent 50%),
+    linear-gradient(135deg, #020604, #060e0a, #08050c);
+}
+
+/* Spring Day Mode (Bright Cherry Blossom Sunbeams) */
+html.theme-spring.mode-day {
+  background-color: #10261f;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(244, 114, 182, 0.45), transparent 50%),
+    radial-gradient(circle at 80% 25%, rgba(52, 211, 153, 0.40), transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(253, 224, 71, 0.30), transparent 55%),
+    linear-gradient(135deg, #0e231c, #1a382d, #2d1e33);
+}
+
+html.theme-spring .neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(244, 114, 182, 0.4), inset 0 0 12px rgba(244, 114, 182, 0.15);
+}
+html.theme-spring .neon-border-cyan {
+  border: 1px solid rgba(244, 114, 182, 0.5) !important;
+}
+html.theme-spring .neon-text-cyan {
+  color: #f472b6 !important;
+  text-shadow: 0 0 12px rgba(244, 114, 182, 0.6);
+}
+html.theme-spring input:focus,
+html.theme-spring select:focus,
+html.theme-spring textarea:focus {
+  border-color: #f472b6;
+  box-shadow: 0 0 15px rgba(244, 114, 182, 0.4);
+}
+
+/* ========================================================================= */
+/* THEME 3: SUMMER (GOLDEN SUNBURST & AZURE SKY) */
+/* ========================================================================= */
+html.theme-summer {
+  --theme-gradient-from: #fbbf24;
+  --theme-gradient-via: #f97316;
+  --theme-gradient-to: #38bdf8;
+  --theme-glow-color: rgba(251, 191, 36, 0.6);
+
+  --color-cyan-300: #fef08a;
+  --color-cyan-400: #fbbf24; /* Golden Sunburst */
+  --color-cyan-500: #f59e0b;
+  --color-fuchsia-300: #fed7aa;
+  --color-fuchsia-400: #f97316; /* Sunset Orange */
+  --color-fuchsia-500: #ea580c;
+  --color-purple-300: #bae6fd;
+  --color-purple-400: #38bdf8; /* Tropical Sky Blue */
+  --color-purple-500: #0284c7;
+
+  --color-teal-50: rgba(251, 191, 36, 0.15);
+  --color-teal-100: rgba(251, 191, 36, 0.28);
+  --color-teal-200: rgba(251, 191, 36, 0.4);
+  --color-teal-400: #fbbf24;
+  --color-teal-500: #f59e0b;
+  --color-teal-600: #fbbf24;
+  --color-teal-700: #fef08a;
+}
+
+/* Summer Night Mode (Deep Midnight Starry Blue with Glowing Fireflies) */
+html.theme-summer,
+html.theme-summer.mode-night {
+  background-color: #020612;
+  background-image:
+    radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.10), transparent 45%),
+    radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.08), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(245, 158, 11, 0.06), transparent 50%),
+    linear-gradient(135deg, #020612, #040d1f, #02050e);
+}
+
+/* Summer Day Mode (Radiant Golden Hour Sunburst) */
+html.theme-summer.mode-day {
+  background-color: #092338;
+  background-image:
+    radial-gradient(circle at 85% 15%, rgba(251, 191, 36, 0.48), transparent 50%),
+    radial-gradient(circle at 15% 30%, rgba(56, 189, 248, 0.42), transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(249, 115, 22, 0.35), transparent 55%),
+    linear-gradient(135deg, #082136, #123854, #3a250a);
+}
+
+html.theme-summer .neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), inset 0 0 12px rgba(251, 191, 36, 0.15);
+}
+html.theme-summer .neon-border-cyan {
+  border: 1px solid rgba(251, 191, 36, 0.5) !important;
+}
+html.theme-summer .neon-text-cyan {
+  color: #fbbf24 !important;
+  text-shadow: 0 0 12px rgba(251, 191, 36, 0.6);
+}
+html.theme-summer input:focus,
+html.theme-summer select:focus,
+html.theme-summer textarea:focus {
+  border-color: #fbbf24;
+  box-shadow: 0 0 15px rgba(251, 191, 36, 0.4);
+}
+
+/* ========================================================================= */
+/* THEME 4: AUTUMN (CRIMSON & AMBER HARVEST) */
+/* ========================================================================= */
+html.theme-autumn {
+  --theme-gradient-from: #ef4444;
+  --theme-gradient-via: #f97316;
+  --theme-gradient-to: #eab308;
+  --theme-glow-color: rgba(249, 115, 22, 0.6);
+
+  --color-cyan-300: #ffedd5;
+  --color-cyan-400: #f97316; /* Pumpkin Orange */
+  --color-cyan-500: #ea580c;
+  --color-fuchsia-300: #fecaca;
+  --color-fuchsia-400: #ef4444; /* Crimson Red */
+  --color-fuchsia-500: #dc2626;
+  --color-purple-300: #fef08a;
+  --color-purple-400: #eab308; /* Amber Gold */
+  --color-purple-500: #ca8a04;
+
+  --color-teal-50: rgba(249, 115, 22, 0.15);
+  --color-teal-100: rgba(249, 115, 22, 0.28);
+  --color-teal-200: rgba(249, 115, 22, 0.4);
+  --color-teal-400: #f97316;
+  --color-teal-500: #ea580c;
+  --color-teal-600: #f97316;
+  --color-teal-700: #ffedd5;
+}
+
+/* Autumn Night Mode (Harvest Moon Ember Midnight) */
+html.theme-autumn,
+html.theme-autumn.mode-night {
+  background-color: #060201;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.10), transparent 45%),
+    radial-gradient(circle at 80% 25%, rgba(249, 115, 22, 0.08), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(234, 179, 8, 0.06), transparent 50%),
+    linear-gradient(135deg, #060201, #0c0502, #080306);
+}
+
+/* Autumn Day Mode (Golden Afternoon Forest Light) */
+html.theme-autumn.mode-day {
+  background-color: #200f04;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(239, 68, 68, 0.48), transparent 50%),
+    radial-gradient(circle at 80% 25%, rgba(249, 115, 22, 0.45), transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(234, 179, 8, 0.38), transparent 55%),
+    linear-gradient(135deg, #1c0d03, #331707, #2c200a);
+}
+
+html.theme-autumn .neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(249, 115, 22, 0.4), inset 0 0 12px rgba(249, 115, 22, 0.15);
+}
+html.theme-autumn .neon-border-cyan {
+  border: 1px solid rgba(249, 115, 22, 0.5) !important;
+}
+html.theme-autumn .neon-text-cyan {
+  color: #f97316 !important;
+  text-shadow: 0 0 12px rgba(249, 115, 22, 0.6);
+}
+html.theme-autumn input:focus,
+html.theme-autumn select:focus,
+html.theme-autumn textarea:focus {
+  border-color: #f97316;
+  box-shadow: 0 0 15px rgba(249, 115, 22, 0.4);
+}
+
+/* ========================================================================= */
+/* THEME 5: WINTER (FROST SKY & POLAR AURORA) */
+/* ========================================================================= */
+html.theme-winter {
+  --theme-gradient-from: #38bdf8;
+  --theme-gradient-via: #22d3ee;
+  --theme-gradient-to: #818cf8;
+  --theme-glow-color: rgba(56, 189, 248, 0.6);
+
+  --color-cyan-300: #bae6fd;
+  --color-cyan-400: #38bdf8; /* Frost Sky Blue */
+  --color-cyan-500: #0284c7;
+  --color-fuchsia-300: #a5f3fc;
+  --color-fuchsia-400: #22d3ee; /* Arctic Ice Cyan */
+  --color-fuchsia-500: #0891b2;
+  --color-purple-300: #c7d2fe;
+  --color-purple-400: #818cf8; /* Snow Crystal Indigo */
+  --color-purple-500: #6366f1;
+
+  --color-teal-50: rgba(56, 189, 248, 0.15);
+  --color-teal-100: rgba(56, 189, 248, 0.28);
+  --color-teal-200: rgba(56, 189, 248, 0.4);
+  --color-teal-400: #38bdf8;
+  --color-teal-500: #0284c7;
+  --color-teal-600: #38bdf8;
+  --color-teal-700: #bae6fd;
+}
+
+/* Winter Night Mode (Polar Midnight Dark Sky with Snowflakes) */
+html.theme-winter,
+html.theme-winter.mode-night {
+  background-color: #01040d;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.10), transparent 45%),
+    radial-gradient(circle at 80% 25%, rgba(125, 211, 252, 0.08), transparent 45%),
+    radial-gradient(circle at 50% 85%, rgba(99, 102, 241, 0.08), transparent 50%),
+    linear-gradient(135deg, #01040d, #030a1c, #020714);
+}
+
+/* Winter Day Mode (Crisp Glacier Morning Blue) */
+html.theme-winter.mode-day {
+  background-color: #061730;
+  background-image:
+    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.48), transparent 50%),
+    radial-gradient(circle at 80% 25%, rgba(125, 211, 252, 0.42), transparent 50%),
+    radial-gradient(circle at 50% 85%, rgba(99, 102, 241, 0.38), transparent 55%),
+    linear-gradient(135deg, #05162e, #0c274d, #143566);
+}
+
+html.theme-winter .neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.4), inset 0 0 12px rgba(56, 189, 248, 0.15);
+}
+html.theme-winter .neon-border-cyan {
+  border: 1px solid rgba(56, 189, 248, 0.5) !important;
+}
+html.theme-winter .neon-text-cyan {
+  color: #38bdf8 !important;
+  text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
+}
+html.theme-winter input:focus,
+html.theme-winter select:focus,
+html.theme-winter textarea:focus {
+  border-color: #38bdf8;
+  box-shadow: 0 0 15px rgba(56, 189, 248, 0.4);
+}
+
+/* Base Card & Component Surface Styling (Optimized for 120 FPS) */
+body, #root, #app-root {
+  background: transparent;
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  color: var(--color-ink);
+  -webkit-overflow-scrolling: touch;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+/* Night Mode Solid Sleek Glass Containers (Fast GPU Rendering) */
+html.mode-night .bg-white,
+html.mode-night .bg-cream,
+html.mode-night .bg-cream-dim {
+  background-color: rgba(9, 14, 26, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Day Mode Crisp Luminous Containers */
+html.mode-day .bg-white,
+html.mode-day .bg-cream,
+html.mode-day .bg-cream-dim {
+  background-color: rgba(14, 24, 44, 0.92) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Default Container Fallback */
+.bg-white,
+.bg-cream,
+.bg-cream-dim {
+  background-color: rgba(10, 15, 28, 0.94) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Hardware-Accelerated Smooth GPU Transforms */
+.gpu-smooth {
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Neon Glow Utility Classes */
+.neon-glow-cyan {
+  box-shadow: 0 0 20px rgba(0, 240, 255, 0.35), inset 0 0 12px rgba(0, 240, 255, 0.12);
+}
+
+.neon-glow-magenta {
+  box-shadow: 0 0 20px rgba(255, 0, 127, 0.35), inset 0 0 12px rgba(255, 0, 127, 0.12);
+}
+
+.neon-glow-purple {
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.35), inset 0 0 12px rgba(168, 85, 247, 0.12);
+}
+
+.neon-border-cyan {
+  border: 1px solid rgba(0, 240, 255, 0.5) !important;
+}
+
+.neon-border-magenta {
+  border: 1px solid rgba(255, 0, 127, 0.5) !important;
+}
+
+.neon-border-purple {
+  border: 1px solid rgba(168, 85, 247, 0.5) !important;
+}
+
+.neon-text-cyan {
+  color: #00f0ff !important;
+  text-shadow: 0 0 12px rgba(0, 240, 255, 0.6);
+}
+
+.neon-text-magenta {
+  color: #ff3399 !important;
+  text-shadow: 0 0 12px rgba(255, 51, 153, 0.6);
+}
+
+.neon-text-purple {
+  color: #c084fc !important;
+  text-shadow: 0 0 12px rgba(192, 132, 252, 0.6);
+}
+
+input,
+select,
+textarea {
+  color: var(--color-ink);
+  background-color: rgba(14, 20, 34, 0.88);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+input.bg-transparent,
+input[class*="bg-transparent"],
+input[class*="border-0"],
+input[class*="border-none"],
+input.border-none {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+
+input.bg-transparent:focus,
+input[class*="bg-transparent"]:focus,
+input[class*="border-0"]:focus,
+input[class*="border-none"]:focus,
+input.border-none:focus {
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgba(148, 163, 184, 0.6);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #00f0ff;
+  box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover, 
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: var(--color-ink) !important;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px transparent !important;
+}
+
+.shadow-coral {
+  box-shadow: 0 0 25px -4px rgba(255, 0, 127, 0.45);
+}
+.shadow-teal {
+  box-shadow: 0 0 25px -4px rgba(0, 240, 255, 0.45);
+}
+.shadow-violet {
+  box-shadow: 0 0 25px -4px rgba(168, 85, 247, 0.45);
+}
+
+.bg-mesh {
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(0, 240, 255, 0.25), transparent 45%),
+    radial-gradient(circle at 85% 15%, rgba(255, 0, 127, 0.25), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(168, 85, 247, 0.22), transparent 45%);
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.overflow-x-auto,
+#teacher-tabs-nav {
+  touch-action: pan-x pan-y;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.scroll-shadow-x {
+  background-color: rgba(15, 23, 42, 0.9);
+}
+
+/* Custom Sleek Dark Neon Scrollbars */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(51, 65, 85, 0.8);
+  border-radius: 9999px;
+  border: 1px solid rgba(0, 240, 255, 0.2);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 240, 255, 0.4);
+}
+
+.theme-title-gradient {
+  background-image: linear-gradient(to right, var(--theme-gradient-from), var(--theme-gradient-via), var(--theme-gradient-to));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  filter: drop-shadow(0 0 25px var(--theme-glow-color));
+}

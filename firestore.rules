@@ -1,0 +1,241 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------------------------------------------------------------------
+    // Helpers
+    // ---------------------------------------------------------------------
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    // The caller's own /users profile doc. Only safe to call after checking
+    // the doc exists (see isApprovedTeacher()) - a get() on a missing doc
+    // throws and denies the whole rule.
+    function myProfile() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    // The administrator. Admin accounts can NEVER be created from the app: they are
+    // set up once, by hand, in the Firebase console (see README).
+    function isAdmin() {
+      return signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && myProfile().role == 'admin'
+        && myProfile().isApproved == true;
+    }
+
+    // Teacher powers: a verified teacher, OR the admin (who also acts as a teacher).
+    function isApprovedTeacher() {
+      return isAdmin() || (
+        signedIn()
+        && exists(/databases/$(database)/documents/users/$(request.auth.uid))
+        && myProfile().role == 'teacher'
+        && myProfile().isApproved == true
+      );
+    }
+
+    // True only if the person typed their password again within the last 10 minutes.
+    // The app asks the admin for their password and re-authenticates before every
+    // account deletion; this makes the server insist on it too.
+    function recentlyReauthenticated() {
+      return request.time.toMillis() - (request.auth.token.get('auth_time', 0) * 1000) < 600000;
+    }
+
+    // ---------------------------------------------------------------------
+    // users
+    //
+    // - Anyone signed in can look up the directory (needed for rosters,
+    //   the messenger, and the faculty directory). Locking this down
+    //   further would require moving user data off "sync the whole
+    //   collection to every client" and onto a backend that can hand back
+    //   per-viewer slices - out of scope here, but worth doing next.
+    // - Writes are locked down: you can only ever create/edit/delete your
+    //   own account, EXCEPT an approved teacher may also manage STUDENT
+    //   accounts (the classic "add/approve/remove a student" workflow) and
+    //   may flip a fellow teacher's verified flag (peer verification).
+    //   A teacher can never edit another teacher's profile fields, change
+    //   anyone's role, self-approve, or delete a fellow teacher's account.
+    // ---------------------------------------------------------------------
+    match /users/{docId} {
+      allow read: if signedIn();
+
+      // Self sign-up. You may only create your OWN account, as a student or
+      // teacher, and it always starts unverified. Nobody can self-register as admin.
+      allow create: if signedIn()
+        && request.auth.uid == docId
+        && request.resource.data.role in ['student', 'teacher']
+        && request.resource.data.isApproved == false;
+
+      // A verified teacher (or the admin) onboarding a STUDENT. Teachers can no
+      // longer create teacher accounts; only the admin can.
+      allow create: if isApprovedTeacher()
+        && request.auth.uid != docId
+        && request.resource.data.role == 'student';
+      allow create: if isAdmin()
+        && request.auth.uid != docId
+        && request.resource.data.role in ['student', 'teacher'];
+
+      // Editing your OWN profile - never your own role or verification status.
+      allow update: if signedIn() && request.auth.uid == docId
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.isApproved == resource.data.isApproved;
+
+      // A verified teacher (or the admin) managing a STUDENT record.
+      allow update: if isApprovedTeacher()
+        && resource.data.role == 'student'
+        && request.resource.data.role == 'student';
+
+      // ONLY the admin can verify, revoke, or edit another TEACHER's account.
+      allow update: if isAdmin()
+        && resource.data.role == 'teacher'
+        && request.resource.data.role == 'teacher';
+
+      // Delete: you can delete your own account (never the admin's), and ONLY the
+      // admin can delete anyone else's - and only right after re-entering their
+      // password. No teacher can delete any other account.
+      allow delete: if signedIn() && request.auth.uid == docId && resource.data.role != 'admin';
+      allow delete: if isAdmin()
+        && resource.data.role != 'admin'
+        && recentlyReauthenticated();
+    }
+
+    // ---------------------------------------------------------------------
+    // deleted_accounts - a marker the admin leaves when deleting an account, so
+    // that person's leftover Firebase login can't quietly sign back in.
+    // ---------------------------------------------------------------------
+    match /deleted_accounts/{docId} {
+      allow read: if signedIn() && (request.auth.uid == docId || isAdmin());
+      allow create: if isAdmin() && recentlyReauthenticated();
+      allow update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------------
+    // attendance_records - teachers take attendance in this app, and
+    // students may also record their own daily check-in (Present/Late/Absent).
+    // Everyone signed in can read records for stats and rosters.
+    // ---------------------------------------------------------------------
+    match /attendance_records/{recordId} {
+      allow read: if signedIn();
+      allow create, update, delete: if isApprovedTeacher();
+      // Student self-attendance logging for today
+      allow create: if signedIn()
+        && request.resource.data.studentId == myProfile().id;
+      allow update: if signedIn()
+        && resource.data.studentId == myProfile().id
+        && request.resource.data.studentId == myProfile().id;
+    }
+
+    // ---------------------------------------------------------------------
+    // security_logs - an append-only audit trail. Anyone signed in can log
+    // an event (e.g. a failed/suspicious login attempt happens before we
+    // necessarily know who's on the other end), but only approved teachers
+    // can read the log, and nobody can edit or erase an entry after the
+    // fact.
+    // ---------------------------------------------------------------------
+    match /security_logs/{logId} {
+      allow read: if isApprovedTeacher();
+      allow create: if signedIn();
+      allow update, delete: if false;
+    }
+
+    // ---------------------------------------------------------------------
+    // classes - only the owning teacher may manage their own class section.
+    // Students may only ever add or remove themselves from a roster
+    // (joining by code or dropping the class).
+    // ---------------------------------------------------------------------
+    match /classes/{classId} {
+      allow read: if signedIn();
+      allow create: if isApprovedTeacher() && request.resource.data.teacherId == myProfile().id;
+
+      // Only the teacher who created the class (or the admin) can edit or delete it,
+      // which includes removing students from it.
+      allow update, delete: if (isApprovedTeacher() && resource.data.teacherId == myProfile().id)
+        || isAdmin();
+
+      // A student can only add THEMSELVES (unless blocked) or remove THEMSELVES.
+      allow update: if signedIn()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['studentIds'])
+        && (
+          (
+            request.resource.data.studentIds.toSet().difference(resource.data.studentIds.toSet()) == [myProfile().id].toSet()
+            && resource.data.studentIds.toSet().difference(request.resource.data.studentIds.toSet()).size() == 0
+            && !(myProfile().id in resource.data.get('blockedStudentIds', []))
+          ) || (
+            resource.data.studentIds.toSet().difference(request.resource.data.studentIds.toSet()) == [myProfile().id].toSet()
+            && request.resource.data.studentIds.toSet().difference(resource.data.studentIds.toSet()).size() == 0
+          )
+        );
+    }
+
+    // ---------------------------------------------------------------------
+    // class_posts (announcements + assignments) - only an approved teacher
+    // may post to a class stream, and only the original author may edit or
+    // delete their own post.
+    // ---------------------------------------------------------------------
+    match /class_posts/{postId} {
+      allow read: if signedIn();
+      allow create: if isApprovedTeacher() && request.resource.data.authorId == myProfile().id;
+      allow update, delete: if isApprovedTeacher() && resource.data.authorId == myProfile().id;
+    }
+
+    // ---------------------------------------------------------------------
+    // post_comments - students and teachers can both comment. Public
+    // comments are visible to class members; private comments are strictly
+    // restricted to the author, the target student, or an approved teacher.
+    // Teachers may delete any comment (moderation).
+    // ---------------------------------------------------------------------
+    match /post_comments/{commentId} {
+      allow read: if signedIn() && (
+        !('commentType' in resource.data) ||
+        resource.data.commentType != 'private' ||
+        isApprovedTeacher() ||
+        resource.data.authorId == myProfile().id ||
+        ('targetStudentId' in resource.data && resource.data.targetStudentId == myProfile().id)
+      );
+      allow create: if signedIn() && request.resource.data.authorId == myProfile().id;
+      allow update: if signedIn() && resource.data.authorId == myProfile().id;
+      allow delete: if (signedIn() && resource.data.authorId == myProfile().id) || isApprovedTeacher();
+    }
+
+    // ---------------------------------------------------------------------
+    // assignment_submissions - students may ONLY view, create, or update
+    // their OWN submissions (FERPA protection: classmates cannot read
+    // each other's submissions or grades). Once an assignment is graded,
+    // students cannot overwrite their work. Teachers can grade and leave feedback.
+    // ---------------------------------------------------------------------
+    match /assignment_submissions/{submissionId} {
+      allow read: if isApprovedTeacher()
+        || (signedIn() && resource.data.studentId == myProfile().id);
+      allow create: if signedIn() && request.resource.data.studentId == myProfile().id;
+      allow update: if signedIn() && resource.data.studentId == myProfile().id
+        && request.resource.data.studentId == myProfile().id
+        && (!('status' in resource.data) || resource.data.status != 'Graded');
+      allow update: if isApprovedTeacher()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['score', 'feedback', 'status', 'isLate']);
+      allow delete: if (signedIn() && resource.data.studentId == myProfile().id && (!('status' in resource.data) || resource.data.status != 'Graded'))
+        || isApprovedTeacher();
+    }
+
+    // ---------------------------------------------------------------------
+    // direct_messages - a private conversation between exactly two people.
+    // Only the two participants can ever read it; only the sender can
+    // create it; the only edit allowed afterwards is the recipient
+    // flipping "read". Participants can delete messages.
+    // ---------------------------------------------------------------------
+    match /direct_messages/{messageId} {
+      allow read: if signedIn()
+        && (resource.data.senderId == myProfile().id || resource.data.recipientId == myProfile().id);
+      allow create: if signedIn() && request.resource.data.senderId == myProfile().id;
+      allow update: if signedIn() && resource.data.recipientId == myProfile().id
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
+      allow delete: if signedIn()
+        && (resource.data.senderId == myProfile().id || resource.data.recipientId == myProfile().id);
+    }
+
+    // Deny everything else by default (replaces the old open catch-all).
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
