@@ -23,7 +23,7 @@
 ### Authentication & onboarding
 - Sign in with **Google Account**, or a **Student/Teacher ID**-based login (backed by real Firebase Authentication — passwords are hashed and managed by Firebase, never stored in Firestore).
 - New Google sign-ins go through a guided onboarding flow to pick a role, department/subject, and complete their profile.
-- New accounts — student **or** teacher, either sign-up method — start unverified. **Students** are verified by any verified teacher; **teachers** can only be verified (or revoked) by the **administrator**. Until verified, an account can't create classes, add/approve other accounts, post to a class, take attendance, or grade. This is enforced both in the UI and in `firestore.rules`, so it can't be bypassed by calling Firestore directly.
+- **Students** are active as soon as they sign up (each teacher controls which students are in their own classes, so there is no student approval step). **Teachers** start unverified and can only be verified (or revoked) by the **administrator**. Until verified, a teacher can't create classes, add accounts, post to a class, take attendance, or grade. This is enforced both in the UI and in `firestore.rules`, so it can't be bypassed by calling Firestore directly.
 
 
 ### Classroom & sections
@@ -118,6 +118,7 @@ If this isn't configured, that one button shows a clear "not configured yet" mes
 |-----------------------------------------------|:-------:|:----------------------------:|:-------------------------------:|
 | Use teacher tools (classes, attendance, grading) | no   | yes (once verified)          | **yes (acts as a teacher too)** |
 | Verify / revoke a teacher                     | no      | **no**                       | yes                             |
+| Approve students                              | not needed: students are active immediately | | |
 | Create a teacher account                      | no      | **no**                       | yes                             |
 | Delete another account                        | no      | **no**                       | **yes, after re-entering their password** |
 | Edit, delete, or remove students from a class | no      | **only classes they created**| any class                       |

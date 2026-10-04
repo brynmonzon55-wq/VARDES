@@ -421,15 +421,6 @@ export default function DailyCheckinsTab({
                     <h3 className="text-xl font-bold text-ink font-display truncate">
                       {infoModalStudent.name}
                     </h3>
-                    <span
-                      className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
-                        infoModalStudent.isApproved
-                          ? "bg-teal-950/80 text-teal-300 border border-teal-500/40"
-                          : "bg-amber-950/80 text-amber-300 border border-amber-500/40"
-                      }`}
-                    >
-                      {infoModalStudent.isApproved ? "Verified Account" : "Pending Approval"}
-                    </span>
                   </div>
                   <p className="text-xs font-mono text-ink-soft/70 mt-0.5">
                     Student ID: #{infoModalStudent.id}

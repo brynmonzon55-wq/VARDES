@@ -458,12 +458,6 @@ export default function TeacherDashboard({
     loadDatabase();
   };
 
-  // Handle Approve / Verify student
-  const handleToggleApproval = async (student: User) => {
-    await updateUserApprovalStatus(student.id, !student.isApproved);
-    loadDatabase();
-  };
-
   // Add new student account
   const handleAddStudentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1100,7 +1094,7 @@ export default function TeacherDashboard({
                 ) : (
                   <span
                     className="px-4 py-2.5 text-xs font-bold text-slate-400 bg-slate-800/80 rounded-xl flex items-center justify-center gap-2 shrink-0 border border-slate-700/60"
-                    title="Your account needs to be verified by an existing faculty member before you can add student accounts."
+                    title="Your account needs to be verified by the administrator before you can add student accounts."
                   >
                     <ShieldAlert className="h-4 w-4" /> <span>Verification required</span>
                   </span>
@@ -1129,20 +1123,6 @@ export default function TeacherDashboard({
                             <span className="text-[10px] font-mono font-bold text-slate-400 truncate">
                               ID: {st.id}
                             </span>
-                            <button
-                              onClick={() => dbUser.isApproved && handleToggleApproval(st)}
-                              disabled={!dbUser.isApproved}
-                              title={!dbUser.isApproved ? "Your account needs to be verified before you can approve students." : undefined}
-                              className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full border shrink-0 ${
-                                dbUser.isApproved ? "cursor-pointer" : "cursor-not-allowed opacity-60"
-                              } ${
-                                st.isApproved
-                                  ? "bg-teal-500/20 text-teal-300 border-teal-500/40"
-                                  : "bg-amber-500/20 text-amber-300 border-amber-500/40 animate-pulse"
-                              }`}
-                            >
-                              {st.isApproved ? "Verified" : "Approve Pending"}
-                            </button>
                           </div>
                           <h3 className="text-base font-black text-ink mt-1 truncate">{st.name}</h3>
                         </div>

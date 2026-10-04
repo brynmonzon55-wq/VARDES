@@ -18,7 +18,7 @@ export interface User {
   role: UserRole;
   createdAt: string;
   avatarUrl?: string; // Profile picture URL (e.g. from Google Account or custom selection)
-  isApproved?: boolean; // New student accounts start as false, pre-seeded starts as true
+  isApproved?: boolean; // Students are active immediately (true). Teachers start false until the admin verifies them.
   subject?: string; // For teachers, the active subject they teach (e.g. Mathematics, Science)
   appliedSubjects?: string[]; // List of subject names applied for but not yet approved
   enrolledSubjects?: string[]; // List of subject names currently enrolled/approved in

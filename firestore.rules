@@ -60,12 +60,15 @@ service cloud.firestore {
     match /users/{docId} {
       allow read: if signedIn();
 
-      // Self sign-up. You may only create your OWN account, as a student or
-      // teacher, and it always starts unverified. Nobody can self-register as admin.
+      // Self sign-up. You may only create your OWN account. A student is active
+      // right away; a teacher MUST start unverified (the admin verifies them).
+      // Nobody can self-register as admin.
       allow create: if signedIn()
         && request.auth.uid == docId
-        && request.resource.data.role in ['student', 'teacher']
-        && request.resource.data.isApproved == false;
+        && (
+          (request.resource.data.role == 'student' && request.resource.data.isApproved == true)
+          || (request.resource.data.role == 'teacher' && request.resource.data.isApproved == false)
+        );
 
       // A verified teacher (or the admin) onboarding a STUDENT. Teachers can no
       // longer create teacher accounts; only the admin can.

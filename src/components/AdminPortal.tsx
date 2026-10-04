@@ -276,7 +276,7 @@ const AdminPortal = ({ user, onSwitchToTeaching }: AdminPortalProps) => {
                 <div className="min-w-0">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="font-extrabold text-sm text-white truncate">{u.name}</span>
-                    {u.isApproved ? (
+                    {u.role === "teacher" && (u.isApproved ? (
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-teal-950/80 text-teal-300 border border-teal-500/40">
                         <CheckCircle2 className="h-3 w-3" /> Verified
                       </span>
@@ -284,7 +284,7 @@ const AdminPortal = ({ user, onSwitchToTeaching }: AdminPortalProps) => {
                       <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-extrabold bg-amber-950/80 text-amber-300 border border-amber-500/40">
                         <Clock className="h-3 w-3" /> Pending
                       </span>
-                    )}
+                    ))}
                   </div>
                   <div className="text-[11px] font-mono text-slate-400 mt-0.5 flex flex-wrap gap-x-3">
                     <span>ID: {u.id}</span>
@@ -296,6 +296,7 @@ const AdminPortal = ({ user, onSwitchToTeaching }: AdminPortalProps) => {
               </div>
 
               <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                {u.role === "teacher" && (
                 <button
                   onClick={() => toggleVerification(u)}
                   disabled={busyId === u.id}
@@ -307,6 +308,7 @@ const AdminPortal = ({ user, onSwitchToTeaching }: AdminPortalProps) => {
                 >
                   {u.isApproved ? "Revoke" : "Verify"}
                 </button>
+                )}
                 <button
                   onClick={() => openDelete(u)}
                   title={`Delete ${u.role} account`}

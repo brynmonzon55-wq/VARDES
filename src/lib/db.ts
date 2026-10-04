@@ -60,12 +60,11 @@ export async function registerUser(
     name: name.trim(),
     role,
     createdAt: formatDate(new Date()),
-    // Every self-registered account - student OR teacher - starts
-    // unverified. A teacher signing themselves up no longer gets instant,
-    // unrestricted teacher powers; they need to be verified by an existing
-    // approved teacher first, same as a new student does. (Firestore rules
-    // enforce this too - a self-created account can't set isApproved:true.)
-    isApproved: false,
+    // Students are active immediately (a teacher controls who is in their
+    // classes). A self-registered TEACHER always starts unverified and needs the
+    // administrator to verify them. (Firestore rules enforce this too - a
+    // self-created teacher can't set isApproved:true.)
+    isApproved: role === "student",
     ...(extra?.email ? { email: extra.email.trim() } : {}),
     ...(extra?.department ? { department: extra.department.trim() } : {}),
     ...(extra?.location ? { location: extra.location.trim() } : {}),
@@ -96,7 +95,7 @@ export async function loginUser(id: string, password: string, expectedRole: User
       name: id.trim(),
       role: expectedRole === "admin" ? "teacher" : expectedRole,
       createdAt: formatDate(new Date()),
-      isApproved: false,
+      isApproved: expectedRole === "student",
       ...(expectedRole === "teacher" ? { subject: "General Education" } : {}),
     };
     await setDoc(doc(db, "users", cred.user.uid), profile);
@@ -183,7 +182,7 @@ export async function loginWithGoogle(expectedRole: UserRole): Promise<User> {
       name: user.displayName || user.email?.split("@")[0] || cleanId,
       role: expectedRole === "admin" ? "teacher" : expectedRole,
       createdAt: formatDate(new Date()),
-      isApproved: false,
+      isApproved: expectedRole === "student",
       avatarUrl: user.photoURL || undefined,
       email: user.email || undefined,
       ...(expectedRole === "teacher" ? { subject: "General Education" } : {}),
